@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
-import 'package:unispot/views/login_page.dart';
-import 'package:unispot/views/splash_screen.dart';
+import 'package:unispot/views/profile_page.dart';
+import 'package:unispot/views/register_page.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _usernameController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _isPasswordVisible = false;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
 
@@ -24,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sign Up"),
+        title: const Text("Iniciar Sesión"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -50,27 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       const Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Center(child: Text('Nombre de usuario')),
-                      ),
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Por favor ingrese un nombre de usuario';
-                          }
-                          return null;
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(15.0),
                         child: Center(child: Text('Correo electrónico')),
                       ),
                       TextFormField(
@@ -84,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         validator: (value) =>
-                            _authService.validateEmail(value ?? ''),
+                            _authService.validateEmail(value!),
                       ),
                       const Padding(
                         padding: EdgeInsets.all(15.0),
@@ -112,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   });
                                 })),
                         validator: (value) =>
-                            _authService.validatePassword(value ?? ''),
+                            _authService.validatePassword(value!),
                       ),
                     ],
                   ),
@@ -121,16 +97,18 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('¿Ya tienes una cuenta? '),
+                  const Text('Aún no tienes una cuenta? '),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const RegisterPage()), // Asegúrate de que 'RegistroPage' sea el nombre correcto de tu página de registro.
                       );
                     },
                     child: const Text(
-                      'Inicia sesión',
+                      'Regístrate',
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
@@ -139,41 +117,49 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: SizedBox(
-                  width: 320,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final navigator = Navigator.of(context);
+              const SizedBox(height: 30),
+              SizedBox(
+                width: 320,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      bool result =
+                          await _authService.loginWithEmailAndPassword(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
 
-                        dynamic result =
-                            await _authService.registerWithEmailAndPassword(
-                                _emailController.text,
-                                _passwordController.text);
-
-                        if (result == null) {
-                        } else {
-                          navigator.pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => const SplashScreen()),
-                          );
-                        }
+                      if (result) {
+                        // Inicio de sesión exitoso, navega al dashboard
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ProfilePage()),
+                        );
+                      } else {
+                        // Muestra SnackBar si el email no está verificado
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Por favor verifica tu correo electrónico antes de iniciar sesión.'),
+                          ),
+                        );
                       }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Registrarse',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                  ),
+                  child: const Text(
+                    'Iniciar Sesión',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
