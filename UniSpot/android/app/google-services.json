@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1045026580000",
+    "project_id": "univalle-reservation",
+    "storage_bucket": "univalle-reservation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045026580000:android:4c03af154f6c8e06d63e45",
+        "android_client_info": {
+          "package_name": "com.example.unispot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEjk7fkX36jG9v6Fl35VdM_5LqC8Y7JBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045026580000:android:222d6ae4ed22bb60d63e45",
+        "android_client_info": {
+          "package_name": "com.example.univalle_reservation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEjk7fkX36jG9v6Fl35VdM_5LqC8Y7JBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
