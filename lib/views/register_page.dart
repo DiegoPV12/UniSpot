@@ -152,7 +152,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         dynamic result =
                             await _authService.registerWithEmailAndPassword(
                                 _emailController.text,
-                                _passwordController.text);
+                                _passwordController.text,
+                                _usernameController.text
+                                
+                                );
 
                         if (result == null) {
                         } else {

@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestore = FirestoreService(); 
+
 
   String? validateEmail(String email) {
     if (email.isEmpty) {
@@ -24,7 +27,7 @@ class AuthService {
   }
 
   Future<User?> registerWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password,String username) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -34,6 +37,10 @@ class AuthService {
 
       User? newUser = userCredential.user;
       await newUser?.sendEmailVerification();
+
+      if (newUser != null) {
+        await _firestore.saveUserToFirestore(newUser, username);
+      }
 
       return newUser;
     } catch (e) {
