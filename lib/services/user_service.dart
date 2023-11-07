@@ -2,9 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 
-class FirestoreService {
+class UserService {
   final CollectionReference usersRef =
       FirebaseFirestore.instance.collection('users');
+
+  // SINGLETON ------------------------------
+  UserService._privateConstructor();
+  static final UserService _instance = UserService._privateConstructor();
+  static UserService get instance => _instance;
+  // ----------------------------------------
 
   Future<void> saveUserToFirestore(User user, String username) async {
     DocumentSnapshot doc = await usersRef.doc(user.uid).get();

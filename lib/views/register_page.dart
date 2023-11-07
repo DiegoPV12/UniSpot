@@ -18,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isPasswordVisible = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
                       );
                     },
                     child: const Text(
@@ -153,9 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             await _authService.registerWithEmailAndPassword(
                                 _emailController.text,
                                 _passwordController.text,
-                                _usernameController.text
-                                
-                                );
+                                _usernameController.text);
 
                         if (result == null) {
                         } else {

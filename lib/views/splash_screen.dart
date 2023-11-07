@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
                         builder: (context) => const ProfilePage()),
                   );
                 });
-        
               }
               return const Center(
                 child: Column(

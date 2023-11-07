@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 import 'profile_controller.dart';
 
 class ProfileWidget extends StatefulWidget {
