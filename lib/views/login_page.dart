@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 import 'package:unispot/views/profile_page.dart';
 import 'package:unispot/views/register_page.dart';
+import 'package:unispot/views/spaces_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -104,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const RegisterPage()), // Asegúrate de que 'RegistroPage' sea el nombre correcto de tu página de registro.
+                                const RegisterPage()),
                       );
                     },
                     child: const Text(
@@ -136,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ProfilePage()),
+                              builder: (context) =>  SpacesListPage()),
                         );
                       } else {
                         // Muestra SnackBar si el email no está verificado

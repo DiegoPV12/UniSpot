@@ -4,12 +4,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ProfileController {
+class ProfileService {
   final ImagePicker _picker = ImagePicker();
   File? _avatar;
   final _firebaseStorage = FirebaseStorage.instance;
   final _auth = FirebaseAuth.instance;
-  final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+  final CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
 
   File? get avatar => _avatar;
 
@@ -31,10 +32,7 @@ class ProfileController {
     if (_avatar != null) {
       String email = _auth.currentUser!.email!;
       email = email.replaceAll(".", "_");
-      final ref = _firebaseStorage
-          .ref()
-          .child(email)
-          .child('avatar.jpg');
+      final ref = _firebaseStorage.ref().child(email).child('avatar.jpg');
       await ref.putFile(_avatar!);
       return await ref.getDownloadURL();
     } else {
@@ -42,11 +40,30 @@ class ProfileController {
     }
   }
 
-  Future<void> updateUserProfile({required String username, String? avatarUrl}) async {
+ Future<String?> updateUserProfile(
+      {String? newUsername, ImageSource? imageSource}) async {
     final uid = _auth.currentUser!.uid;
-    await usersCollection.doc(uid).update({
-      'username': username,
-      'avatarURL': avatarUrl,
-    });
+    Map<String, dynamic> updateData = {};
+
+    if (newUsername != null) {
+      updateData['username'] = newUsername;
+    }
+
+   String? avatarUrl;
+    if (imageSource != null) {
+      final pickedFile = await _picker.pickImage(source: imageSource);
+      if (pickedFile != null) {
+        _avatar = File(pickedFile.path);
+        avatarUrl = await uploadAvatarToFirebase();
+        if (avatarUrl != null) {
+          updateData['avatarURL'] = avatarUrl;
+        }
+      }
+    }
+
+    if (updateData.isNotEmpty) {
+      await usersCollection.doc(uid).update(updateData);
+    }
+    return avatarUrl;
   }
 }

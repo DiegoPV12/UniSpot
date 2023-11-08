@@ -5,6 +5,7 @@ class SpaceModel {
   final String name;
   final int capacity;
   final String description;
+  final String type;
   final String imageUrl;
   final List<String> availableTimeSlots;
 
@@ -13,6 +14,7 @@ class SpaceModel {
     required this.name,
     required this.capacity,
     required this.description,
+    required this.type,
     this.imageUrl = '',
     required this.availableTimeSlots,
   });
@@ -23,6 +25,7 @@ class SpaceModel {
       name: doc['name'],
       capacity: doc['capacity'],
       description: doc['description'],
+      type: doc['type'],
       imageUrl: doc['imageUrl'],
       availableTimeSlots: List<String>.from(doc['availableTimeSlots']),
     );
@@ -34,6 +37,7 @@ class SpaceModel {
       'name': name,
       'capacity': capacity,
       'description': description,
+      'type': type,
       'imageUrl': imageUrl,
       'availableTimeSlots': availableTimeSlots,
     };

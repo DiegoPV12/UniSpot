@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../models/user_model.dart';
-import 'profile_controller.dart';
+import '../../services/profile_service.dart';
 
 class ProfileWidget extends StatefulWidget {
   final UserModel user;
 
-  const ProfileWidget({Key? key, required this.user}) : super(key: key);
+  const ProfileWidget({super.key, required this.user});
 
   @override
   State<ProfileWidget> createState() => _ProfileWidgetState();
@@ -15,35 +15,14 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   late String _avatarURL;
   late TextEditingController _nameController;
-  final ProfileController _profileController = ProfileController();
+  final ProfileService _profileService = ProfileService();
+
 
   @override
   void initState() {
     super.initState();
     _avatarURL = widget.user.avatarURL;
     _nameController = TextEditingController(text: widget.user.username);
-  }
-
-  Future<void> _updateAvatar() async {
-    final pickedFile =
-        await _profileController.getAvatarImage(ImageSource.gallery);
-
-    if (pickedFile != null) {
-      String? newAvatarURL = await _profileController.uploadAvatarToFirebase();
-
-      if (newAvatarURL != null) {
-        setState(() {
-          _avatarURL = newAvatarURL;
-        });
-      }
-    }
-  }
-
-  Future<void> _updateUsername() async {
-    await _profileController.updateUserProfile(
-      username: _nameController.text,
-      avatarUrl: _avatarURL,
-    );
   }
 
   @override
@@ -66,7 +45,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: InkWell(
-                onTap: _updateAvatar,
+                onTap: () async {
+                  final avatarURL = await _profileService.updateUserProfile(
+                      imageSource: ImageSource.gallery);
+                  setState(() {
+                    _avatarURL = avatarURL!;
+                  });
+                },
                 child: CircleAvatar(
                   radius: 50,
                   backgroundImage: _avatarURL.isNotEmpty
@@ -82,7 +67,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 child: TextField(
                   controller: _nameController,
                   textAlign: TextAlign.center,
-                  onSubmitted: (value) => _updateUsername(),
+                  onSubmitted: (value) async {
+                    await _profileService.updateUserProfile(newUsername: value);
+                  },
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                   decoration: const InputDecoration(

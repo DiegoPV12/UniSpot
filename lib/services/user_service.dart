@@ -20,7 +20,7 @@ class UserService {
         'uid': user.uid,
         'email': user.email,
         'username': username,
-        'avatarURL': 'assets/UnivalleLogo.png'
+        'avatarURL': ''
       });
     }
   }
