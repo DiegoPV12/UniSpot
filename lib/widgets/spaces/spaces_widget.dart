@@ -46,7 +46,7 @@ class SpaceCardWidget extends StatelessWidget {
             child: Text(
               space.name,
               style: const TextStyle(
-                  color: Colors.black, 
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 20),
             ),
