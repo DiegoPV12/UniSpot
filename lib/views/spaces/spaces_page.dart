@@ -1,57 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/space_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/spaces/spaces_widget.dart';
+import 'bloc/spaces_bloc.dart';
+import 'bloc/spaces_event.dart';
+import 'bloc/spaces_state.dart';
+
 
 class SpacesListPage extends StatelessWidget {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  SpacesListPage({super.key});
+  const SpacesListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestore.collection('spaces').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Aquí van los chips para filtrar
+          SizedBox(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: const [
+                ChipWidget(type: 'Exteriores'),
+                ChipWidget(type: 'Sala de Computo'),
+                ChipWidget(type: 'Auditorios'),
+              ],
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<SpacesBloc, SpacesState>(
+              builder: (context, state) {
+                if (state is SpacesLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is SpacesError) {
+                  return Center(child: Text('Error: ${state.message}'));
+                }
+                if (state is SpacesLoaded) {
+                  return ListView.builder(
+                    itemCount: state.spaces.length,
+                    itemBuilder: (context, index) {
+                      return SpaceCardWidget(space: state.spaces[index]);
+                    },
+                  );
+                }
+                // Mostrar mensaje inicial o cualquier otro estado
+                return const Center(
+                    child: Text('Seleccione un tipo de espacio.'));
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+class ChipWidget extends StatelessWidget {
+  final String type;
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No hay espacios disponibles.'));
-          }
+  const ChipWidget({Key? key, required this.type}) : super(key: key);
 
-          List<SpaceModel> spaces = snapshot.data!.docs
-              .map((doc) => SpaceModel.fromDocument(doc))
-              .toList();
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20.0, left: 55.0, bottom: 20.0),
-                child: Text('Espacios Disponibles',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        fontFamily: 'Inter-ExtraBold')),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: spaces.length,
-                  itemBuilder: (context, index) {
-                    return SpaceCardWidget(space: spaces[index]);
-                  },
-                ),
-              ),
-            ],
-          );
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: ChoiceChip(
+        label: Text(type),
+        selected: false,
+        onSelected: (selected) {
+          // Aquí se despacha el evento para filtrar los espacios por tipo
+          context.read<SpacesBloc>().add(FilterByTypeEvent(type));
         },
       ),
     );

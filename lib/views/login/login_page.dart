@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
-import 'package:unispot/views/register_page.dart';
-import 'package:unispot/views/spaces_page.dart';
+import 'package:unispot/views/register/register_page.dart';
+import 'package:unispot/views/spaces/spaces_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SpacesListPage()),
+                              builder: (context) => const SpacesListPage()),
                         );
                       } else {
                         // Muestra SnackBar si el email no está verificado

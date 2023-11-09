@@ -1,7 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:unispot/firebase_options.dart';
-import 'package:unispot/views/register_page.dart';
+import 'package:provider/provider.dart';
+import 'package:unispot/services/space_service.dart';
+import 'views/register/register_page.dart';
+import 'views/spaces/bloc/spaces_bloc.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +20,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        fontFamily: 'Inter',
+    return MultiProvider(
+      providers: [
+        Provider<SpacesBloc>(
+          create: (context) => SpacesBloc(spaceService: SpaceService.instance),
+          dispose: (context, bloc) => bloc.close(),
+        ),
+       
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          fontFamily: 'Inter',
+        ),
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

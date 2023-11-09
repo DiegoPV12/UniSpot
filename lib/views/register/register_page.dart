@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
-import 'package:unispot/views/login_page.dart';
-import 'package:unispot/views/splash_screen.dart';
+
+import '../login/login_page.dart';
+import 'splash_screen.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

@@ -34,6 +34,21 @@ class SpaceService {
     throw Exception('El espacio no existe');
   }
 
+  Future<List<SpaceModel>> filterSpacesByType(String type) async {
+    QuerySnapshot querySnapshot =
+        await spacesRef.where('type', isEqualTo: type).get();
+    return querySnapshot.docs
+        .map((doc) => SpaceModel.fromDocument(doc))
+        .toList();
+  }
+
+  Future<List<SpaceModel>> loadAllSpaces() async {
+    QuerySnapshot querySnapshot = await spacesRef.get();
+    return querySnapshot.docs
+        .map((doc) => SpaceModel.fromDocument(doc))
+        .toList();
+  }
+
   Future<void> updateSpace(SpaceModel space) async {
     await spacesRef.doc(space.uid).update(space.toMap());
   }
