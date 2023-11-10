@@ -1,32 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/shared/chip_widget.dart';
 import '../../widgets/spaces/spaces_widget.dart';
 import 'bloc/spaces_bloc.dart';
-import 'bloc/spaces_event.dart';
 import 'bloc/spaces_state.dart';
-
 
 class SpacesListPage extends StatelessWidget {
   const SpacesListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+          centerTitle: true,
+          title: Image.asset(
+            'assets/UnivalleLogo2.jpeg',
+            fit: BoxFit.contain,
+            height: 180,
+          )),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Aquí van los chips para filtrar
-          SizedBox(
-            height: 50,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                ChipWidget(type: 'Exteriores'),
-                ChipWidget(type: 'Sala de Computo'),
-                ChipWidget(type: 'Auditorios'),
-              ],
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  ChipWidget(type: 'Exteriores'),
+                  ChipWidget(type: 'Sala de Computo'),
+                  ChipWidget(type: 'Auditorios'),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -39,41 +45,26 @@ class SpacesListPage extends StatelessWidget {
                   return Center(child: Text('Error: ${state.message}'));
                 }
                 if (state is SpacesLoaded) {
-                  return ListView.builder(
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, 
+                      crossAxisSpacing:
+                          5.0, 
+                      mainAxisSpacing:
+                          4.0, 
+                    ),
                     itemCount: state.spaces.length,
                     itemBuilder: (context, index) {
                       return SpaceCardWidget(space: state.spaces[index]);
                     },
                   );
                 }
-                // Mostrar mensaje inicial o cualquier otro estado
                 return const Center(
                     child: Text('Seleccione un tipo de espacio.'));
               },
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ChipWidget extends StatelessWidget {
-  final String type;
-
-  const ChipWidget({Key? key, required this.type}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ChoiceChip(
-        label: Text(type),
-        selected: false,
-        onSelected: (selected) {
-          // Aquí se despacha el evento para filtrar los espacios por tipo
-          context.read<SpacesBloc>().add(FilterByTypeEvent(type));
-        },
       ),
     );
   }

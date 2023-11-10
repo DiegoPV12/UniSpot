@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 
+import '../../widgets/spaces/input_decoration_widget.dart';
+import '../../widgets/spaces/password_decoration.dart';
 import '../login/login_page.dart';
 import 'splash_screen.dart';
 
@@ -55,14 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) {
                           if (value?.isEmpty ?? true) {
                             return 'Por favor ingrese un nombre de usuario';
@@ -76,14 +72,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value ?? ''),
                       ),
@@ -94,26 +84,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                            fillColor: const Color(0xFFECDFE4),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                })),
+                        decoration: PasswordInputDecoration().getDecoration(
+                          hintText: 'Contraseña',
+                          isPasswordVisible: _isPasswordVisible,
+                          onToggleVisibility: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
                         validator: (value) =>
-                            _authService.validatePassword(value ?? ''),
+                            _authService.validatePassword(value!),
                       ),
                     ],
                   ),

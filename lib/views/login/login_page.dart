@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 import 'package:unispot/views/register/register_page.dart';
 import 'package:unispot/views/spaces/spaces_page.dart';
+import 'package:unispot/widgets/spaces/input_decoration_widget.dart';
+
+import '../../widgets/spaces/password_decoration.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -51,14 +54,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value!),
                       ),
@@ -69,24 +66,15 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                            fillColor: const Color(0xFFECDFE4),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                })),
+                        decoration: PasswordInputDecoration().getDecoration(
+                          hintText: 'Contraseña',
+                          isPasswordVisible: _isPasswordVisible,
+                          onToggleVisibility: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
                         validator: (value) =>
                             _authService.validatePassword(value!),
                       ),

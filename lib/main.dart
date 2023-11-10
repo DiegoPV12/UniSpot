@@ -6,7 +6,6 @@ import 'package:unispot/services/space_service.dart';
 import 'views/register/register_page.dart';
 import 'views/spaces/bloc/spaces_bloc.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -26,9 +25,9 @@ class MyApp extends StatelessWidget {
           create: (context) => SpacesBloc(spaceService: SpaceService.instance),
           dispose: (context, bloc) => bloc.close(),
         ),
-       
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -55,5 +54,4 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return const RegisterPage();
   }
-  
 }
