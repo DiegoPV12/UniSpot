@@ -22,7 +22,7 @@ class SpacesListPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(top:30.0,bottom:15.0 ,left: 15.0,right:15.0 ),
             child: SizedBox(
               height: 50,
               child: ListView(
