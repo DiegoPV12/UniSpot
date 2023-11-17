@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 import 'package:unispot/views/register/register_page.dart';
 import 'package:unispot/views/spaces/spaces_page.dart';
-import 'package:unispot/widgets/spaces/input_decoration_widget.dart';
+import 'package:unispot/widgets/shared/input_decoration_widget.dart';
 
-import '../../widgets/spaces/password_decoration.dart';
+import '../../widgets/shared/password_decoration.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

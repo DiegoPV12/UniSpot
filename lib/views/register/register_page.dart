@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 
-import '../../widgets/spaces/input_decoration_widget.dart';
-import '../../widgets/spaces/password_decoration.dart';
+import '../../widgets/shared/input_decoration_widget.dart';
+import '../../widgets/shared/password_decoration.dart';
 import '../login/login_page.dart';
 import 'splash_screen.dart';
 
