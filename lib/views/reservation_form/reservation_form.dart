@@ -48,7 +48,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(25.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -117,25 +117,39 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: useMaterial,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        useMaterial = value ?? false;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
+                    child: Checkbox(
+                      activeColor: const Color.fromARGB(255, 129, 40, 75),
+                      value: useMaterial,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          useMaterial = value ?? false;
+                        });
+                      },
+                    ),
                   ),
-                  const Text('Utilizar material de la sala'),
+                  const Text('DESEA UTILIZAR MATERIAL DE LA SALA'),
                 ],
               ),
               Center(
-                child: ElevatedButton(
-                  onPressed: () => _submitReservation(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 129, 40, 75),
-                    foregroundColor: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: SizedBox(
+                    height: 45,
+                    width: 250,
+                    child: ElevatedButton(
+                      onPressed: () => _submitReservation(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 129, 40, 75),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('RESERVAR',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
                   ),
-                  child: const Text('RESERVAR'),
                 ),
               ),
             ],

@@ -6,9 +6,9 @@ class SpaceDetailsPage extends StatelessWidget {
   final SpaceModel space;
 
   const SpaceDetailsPage({
-    Key? key,
+    super.key,
     required this.space,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,19 +59,25 @@ class SpaceDetailsPage extends StatelessWidget {
               left: 40.0,
               right: 40.0,
             ),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => ReservationDetailsForm(space: space)),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 129, 40, 75),
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Reservar',
+            child: SizedBox(
+              height: 50,
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ReservationDetailsForm(space: space)),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 129, 40, 75),
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Reservar',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ),
           ),

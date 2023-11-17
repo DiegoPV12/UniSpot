@@ -13,11 +13,13 @@ class SpacesListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
         centerTitle: true,
         title: Image.asset(
-          'assets/UnivalleLogo2.jpeg',
+          'assets/UnivalleLogo2.png',
           fit: BoxFit.contain,
-          height: 180,
+          height: 80,
+          color: Colors.white,
         ),
       ),
       body: SingleChildScrollView(
