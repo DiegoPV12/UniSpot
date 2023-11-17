@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
+
 import '../../widgets/shared/input_decoration_widget.dart';
 import '../../widgets/shared/password_decoration.dart';
 import '../login/login_page.dart';
@@ -56,7 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: BaseInputDecoration().getDecoration(),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) {
                           if (value?.isEmpty ?? true) {
                             return 'Por favor ingrese un nombre de usuario';
@@ -70,7 +72,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: BaseInputDecoration().getDecoration(),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value ?? ''),
                       ),

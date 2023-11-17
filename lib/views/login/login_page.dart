@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:unispot/services/auth_service.dart';
 import 'package:unispot/views/register/register_page.dart';
 import 'package:unispot/views/spaces/spaces_page.dart';
-import '../../widgets/shared/input_decoration_widget.dart';
+import 'package:unispot/widgets/shared/input_decoration_widget.dart';
+
 import '../../widgets/shared/password_decoration.dart';
 
 class LoginPage extends StatefulWidget {
@@ -53,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: BaseInputDecoration().getDecoration(),
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value!),
                       ),

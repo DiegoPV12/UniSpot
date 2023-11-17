@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/space_model.dart';
+import '../reservation_form/reservation_form.dart';
 
 class SpaceDetailsPage extends StatelessWidget {
   final SpaceModel space;
@@ -60,7 +61,10 @@ class SpaceDetailsPage extends StatelessWidget {
             ),
             child: ElevatedButton(
               onPressed: () {
-                // Acción al presionar el botón Reservar
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => ReservationDetailsForm(space: space)),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 129, 40, 75),
