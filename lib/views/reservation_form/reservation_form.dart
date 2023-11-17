@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../services/reservation_service.dart';
 import '../../models/space_model.dart';
+import '../../widgets/shared/reservation_input_widget.dart';
 import 'notification.dart';
 
 class ReservationDetailsForm extends StatefulWidget {
@@ -19,6 +20,8 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
       TextEditingController();
   String? selectedTimeSlot;
   bool useMaterial = false;
+  final inputDecoration = ReservationInputDecoration();
+
   DateTime selectedDate = DateTime.now();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -51,57 +54,67 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // Selector de fecha
               Card(
-                elevation: 5,
-                color: const Color(0xFFECDFE4),
-                surfaceTintColor: const Color(0xFFECDFE4),
-                child: CalendarDatePicker(
-                  initialDate: selectedDate,
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 7)),
-                  onDateChanged: (newDate) {
+                  elevation: 10,
+                  surfaceTintColor: Colors.white60,
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                        primary: Color.fromARGB(255, 129, 40, 75),
+                      ),
+                      dialogBackgroundColor: Colors.white,
+                    ),
+                    child: CalendarDatePicker(
+                      initialDate: selectedDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(const Duration(days: 7)),
+                      onDateChanged: (newDate) {
+                        setState(() {
+                          selectedDate = newDate;
+                        });
+                      },
+                    ),
+                  )),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: DropdownButtonFormField<String>(
+                  value: selectedTimeSlot,
+                  decoration:
+                      inputDecoration.getDecoration(hintText: 'Horario'),
+                  items: widget.space.availableTimeSlots
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
                     setState(() {
-                      selectedDate = newDate;
+                      selectedTimeSlot = newValue;
                     });
                   },
+                  validator: (value) =>
+                      value == null ? 'Seleccione un horario' : null,
                 ),
               ),
-              // Dropdown para seleccionar horario
-              DropdownButtonFormField<String>(
-                value: selectedTimeSlot,
-                decoration:
-                    const InputDecoration(labelText: 'Horario de Reserva'),
-                items: widget.space.availableTimeSlots
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedTimeSlot = newValue;
-                  });
-                },
-                validator: (value) =>
-                    value == null ? 'Seleccione un horario' : null,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: TextFormField(
+                  controller: _reasonController,
+                  decoration: inputDecoration.getDecoration(
+                      hintText: 'Razón de la Reserva'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Ingrese la razón de la reserva' : null,
+                ),
               ),
-              // Campo de texto para la razón de la reserva
-              TextFormField(
-                controller: _reasonController,
-                decoration:
-                    const InputDecoration(labelText: 'Razón de la Reserva'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Ingrese la razón de la reserva' : null,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: TextFormField(
+                  controller: _additionalNotesController,
+                  decoration: inputDecoration.getDecoration(
+                      hintText: 'Detalles Adicionales'),
+                ),
               ),
-              // Campo de texto para detalles adicionales
-              TextFormField(
-                controller: _additionalNotesController,
-                decoration:
-                    const InputDecoration(labelText: 'Detalles Adicionales'),
-              ),
-              // Checkbox para el uso de material
               Row(
                 children: [
                   Checkbox(
@@ -112,17 +125,18 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                       });
                     },
                   ),
-                  const Text('Utilizar Material de la Sala'),
+                  const Text('Utilizar material de la sala'),
                 ],
               ),
-              // Botón para confirmar la reserva
-              ElevatedButton(
-                onPressed: () => _submitReservation(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 129, 40, 75),
-                  foregroundColor: Colors.white,
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => _submitReservation(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 129, 40, 75),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('RESERVAR'),
                 ),
-                child: const Text('Confirmar Reserva'),
               ),
             ],
           ),
