@@ -46,6 +46,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
           ],
         ),
         centerTitle: true,
+        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(25.0),
@@ -101,6 +102,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                 padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                   controller: _reasonController,
+                  cursorColor: const Color.fromARGB(255, 129, 40, 75),
                   decoration: inputDecoration.getDecoration(
                       hintText: 'Razón de la Reserva'),
                   validator: (value) =>
@@ -111,6 +113,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                 padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                   controller: _additionalNotesController,
+                  cursorColor: const Color.fromARGB(255, 129, 40, 75),
                   decoration: inputDecoration.getDecoration(
                       hintText: 'Detalles Adicionales'),
                 ),

@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:unispot/widgets/shared/navbar.dart';
 import 'package:unispot/widgets/spaces/skeleton_card.dart';
 import '../../widgets/shared/chip_widget.dart';
 import '../../widgets/spaces/spaces_widget.dart';
 import 'bloc/spaces_bloc.dart';
+import 'bloc/spaces_event.dart';
 import 'bloc/spaces_state.dart';
 
-class SpacesListPage extends StatelessWidget {
+class SpacesListPage extends StatefulWidget {
   const SpacesListPage({super.key});
+
+  @override
+  State<SpacesListPage> createState() => _SpacesListPageState();
+}
+
+class _SpacesListPageState extends State<SpacesListPage> {
+  String _selectedType = '';
+
+  void _handleChipSelected(String type) {
+    setState(() {
+      _selectedType = type;
+    });
+    context.read<SpacesBloc>().add(FilterByTypeEvent(type));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +38,10 @@ class SpacesListPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
+      bottomNavigationBar: CustomNavigationBar(
+        currentIndex: 0,
+        navigationContext: context,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,10 +53,22 @@ class SpacesListPage extends StatelessWidget {
                 height: 50,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: const [
-                    ChipWidget(type: 'Exteriores'),
-                    ChipWidget(type: 'Sala de Computo'),
-                    ChipWidget(type: 'Auditorios'),
+                  children: [
+                    ChipWidget(
+                      type: 'Exteriores',
+                      isSelected: _selectedType == 'Exteriores',
+                      onSelected: () => _handleChipSelected('Exteriores'),
+                    ),
+                    ChipWidget(
+                      type: 'Sala de Computo',
+                      isSelected: _selectedType == 'Sala de Computo',
+                      onSelected: () => _handleChipSelected('Sala de Computo'),
+                    ),
+                    ChipWidget(
+                      type: 'Auditorios',
+                      isSelected: _selectedType == 'Auditorios',
+                      onSelected: () => _handleChipSelected('Auditorios'),
+                    ),
                   ],
                 ),
               ),
@@ -44,7 +76,6 @@ class SpacesListPage extends StatelessWidget {
             BlocBuilder<SpacesBloc, SpacesState>(
               builder: (context, state) {
                 if (state is SpacesLoading) {
-                  // Mostrar varias skeleton cards
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -54,13 +85,12 @@ class SpacesListPage extends StatelessWidget {
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 4.0,
                     ),
-                    itemCount: 6, // Número de skeleton cards a mostrar
+                    itemCount: 6,
                     itemBuilder: (context, index) {
                       return const SpaceSkeletonCard();
                     },
                   );
                 } else if (state is SpacesLoaded) {
-                  // Mostrar los datos reales
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -76,10 +106,8 @@ class SpacesListPage extends StatelessWidget {
                     },
                   );
                 } else if (state is SpacesError) {
-                  // Manejar estado de error
                   return Center(child: Text('Error: ${state.message}'));
                 }
-                // Estado inicial o predeterminado
                 return const Center(
                     child: Text('Seleccione un tipo de espacio.'));
               },

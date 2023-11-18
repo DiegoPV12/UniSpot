@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class BaseInputDecoration {
   InputDecoration getDecoration() {
     return InputDecoration(
-      fillColor: const Color(0xFFECDFE4),
+      fillColor: const Color.fromARGB(255, 233, 201, 213),
       filled: true,
       border: OutlineInputBorder(
         borderSide: BorderSide.none,

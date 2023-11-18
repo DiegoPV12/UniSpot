@@ -8,6 +8,7 @@ class ReservationInputDecoration extends BaseInputDecoration {
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.black),
           floatingLabelBehavior: FloatingLabelBehavior.never,
+          
         );
 
     return baseDecoration;
