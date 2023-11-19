@@ -28,7 +28,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 280,
+      height: 250,
       decoration: const BoxDecoration(
         color: Color.fromARGB(255, 233, 201, 213),
         borderRadius: BorderRadius.only(

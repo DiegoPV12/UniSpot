@@ -115,5 +115,13 @@ class ReservationService {
     throw Exception('La reserva no existe');
   }
 
+  Future<List<ReservationModel>> getReservationsByUserId(String userId) async {
+    QuerySnapshot querySnapshot =
+        await reservationsRef.where('userId', isEqualTo: userId).get();
+    return querySnapshot.docs
+        .map((doc) => ReservationModel.fromDocument(doc))
+        .toList();
+  }
+
   // Puedes agregar otros métodos como updateReservation, deleteReservation...
 }
