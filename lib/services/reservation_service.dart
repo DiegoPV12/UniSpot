@@ -6,12 +6,10 @@ class ReservationService {
   final CollectionReference reservationsRef =
       FirebaseFirestore.instance.collection('reservations');
 
-  // SINGLETON ------------------------------
   ReservationService._privateConstructor();
   static final ReservationService _instance =
       ReservationService._privateConstructor();
   static ReservationService get instance => _instance;
-  // ----------------------------------------
 
   Future<void> createReservation({
     required String spaceId,
@@ -23,7 +21,6 @@ class ReservationService {
   }) async {
     Map<String, Timestamp> times = _convertTimeSlot(timeSlot, day);
 
-    // Verificar la disponibilidad antes de crear la reserva
     bool isAvailable = await _checkSpaceAvailability(
         spaceId, times['startTime']!, times['endTime']!);
     if (!isAvailable) {
@@ -32,7 +29,6 @@ class ReservationService {
 
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Crea un nuevo documento y obtiene su referencia
     DocumentReference reservationRef = await reservationsRef.add({
       'userId': currentUserId,
       'spaceId': spaceId,
@@ -45,10 +41,17 @@ class ReservationService {
       'day': day,
     });
 
-    // Actualiza el documento recién creado con su propio UID
     await reservationRef.update({
       'uid': reservationRef.id,
     });
+  }
+
+  Future<void> updateReservation(ReservationModel reservation) async {
+    await reservationsRef.doc(reservation.uid).update(reservation.toJson());
+  }
+
+  Future<void> cancelReservation(String reservationId) async {
+    await reservationsRef.doc(reservationId).delete();
   }
 
   Map<String, Timestamp> _convertTimeSlot(String? timeSlot, Timestamp day) {
@@ -94,17 +97,16 @@ class ReservationService {
       );
       String existingStatus = doc['status'];
 
-      // Solo restringir nuevas reservas si existe una aprobada en el mismo horario
       if (existingStatus != 'pending' &&
           startDate.isAtSameMomentAs(existingStart) &&
           endDate.isAtSameMomentAs(existingEnd)) {
         if (!(endTime.seconds <= doc['startTime'].seconds ||
             startTime.seconds >= doc['endTime'].seconds)) {
-          return false; // No disponible debido a una reserva aprobada
+          return false;
         }
       }
     }
-    return true; // Disponible o solo reservas pendientes en el horario
+    return true;
   }
 
   Future<ReservationModel> getReservation(String uid) async {
@@ -122,6 +124,4 @@ class ReservationService {
         .map((doc) => ReservationModel.fromDocument(doc))
         .toList();
   }
-
-  // Puedes agregar otros métodos como updateReservation, deleteReservation...
 }

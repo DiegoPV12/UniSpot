@@ -10,7 +10,8 @@ class ReservationModel {
   final String reason;
   final String additionalNotes;
   final bool useMaterial;
-  final Timestamp day; // Suponiendo que el día se guarda como Timestamp
+  final Timestamp day;
+  final String? timeSlot;  // Descomentar si necesitas este campo
 
   ReservationModel({
     required this.uid,
@@ -18,29 +19,31 @@ class ReservationModel {
     required this.spaceId,
     required this.startTime,
     required this.endTime,
-    required this.reason,
     this.status = 'pending',
+    required this.reason,
     this.additionalNotes = '',
     required this.useMaterial,
     required this.day,
+    this.timeSlot,  // Descomentar si agregas este campo
   });
 
-  factory ReservationModel.fromDocument(DocumentSnapshot doc) {
-    return ReservationModel(
-      uid: doc['uid'],
-      userId: doc['userId'],
-      spaceId: doc['spaceId'],
-      startTime: doc['startTime'],
-      endTime: doc['endTime'],
-      status: doc['status'],
-      reason: doc['reason'],
-      additionalNotes: doc['additionalNotes'],
-      useMaterial: doc['useMaterial'],
-      day: doc['day'],
-    );
-  }
+ factory ReservationModel.fromDocument(DocumentSnapshot doc) {
+  return ReservationModel(
+    uid: doc['uid'] ?? '',
+    userId: doc['userId'] ?? '',
+    spaceId: doc['spaceId'] ?? '',
+    startTime: doc['startTime'] ?? Timestamp.now(),
+    endTime: doc['endTime'] ?? Timestamp.now(),
+    status: doc['status'] ?? 'pending',
+    reason: doc['reason'] ?? '',
+    additionalNotes: doc['additionalNotes'] ?? '',
+    useMaterial: doc['useMaterial'] ?? false,
+    day: doc['day'] ?? Timestamp.now(),
+  );
+}
 
-  Map<String, dynamic> toMap() {
+
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'userId': userId,
@@ -48,10 +51,40 @@ class ReservationModel {
       'startTime': startTime,
       'endTime': endTime,
       'status': status,
+      'reason': reason,
       'additionalNotes': additionalNotes,
-      'reason':reason,
       'useMaterial': useMaterial,
       'day': day,
+      'timeSlot': timeSlot,  // Descomentar si agregas este campo
     };
+  }
+
+  // Método copyWith para facilitar la actualización de instancias
+  ReservationModel copyWith({
+    String? uid,
+    String? userId,
+    String? spaceId,
+    Timestamp? startTime,
+    Timestamp? endTime,
+    String? status,
+    String? reason,
+    String? additionalNotes,
+    bool? useMaterial,
+    Timestamp? day,
+    String? timeSlot,  // Descomentar si agregas este campo
+  }) {
+    return ReservationModel(
+      uid: uid ?? this.uid,
+      userId: userId ?? this.userId,
+      spaceId: spaceId ?? this.spaceId,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      status: status ?? this.status,
+      reason: reason ?? this.reason,
+      additionalNotes: additionalNotes ?? this.additionalNotes,
+      useMaterial: useMaterial ?? this.useMaterial,
+      day: day ?? this.day,
+      timeSlot: timeSlot ?? this.timeSlot,  // Descomentar si agregas este campo
+    );
   }
 }
