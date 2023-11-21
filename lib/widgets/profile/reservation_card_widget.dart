@@ -11,8 +11,7 @@ import '/views/reservation_form/reservation_form.dart';
 class ReservationCardWidget extends StatelessWidget {
   final ReservationModel reservation;
 
-  const ReservationCardWidget({
-    Key? key,
+  const ReservationCardWidget({super.key, 
     required this.reservation,
   });
 
@@ -45,17 +44,17 @@ class ReservationCardWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Cancelar Reserva'),
-          content: Text('¿Estás seguro de que quieres cancelar esta reserva?'),
+          title: const Text('Cancelar Reserva'),
+          content: const Text('¿Estás seguro de que quieres cancelar esta reserva?'),
           actions: <Widget>[
             TextButton(
-              child: Text('No'),
+              child: const Text('No'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Sí'),
+              child: const Text('Sí'),
               onPressed: () {
                 ReservationService.instance
                     .cancelReservation(reservation.uid)
@@ -93,13 +92,13 @@ class ReservationCardWidget extends StatelessWidget {
       future: SpaceService.instance.getSpaceFromFirestore(reservation.spaceId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (!snapshot.hasData) {
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         }
         SpaceModel space = snapshot.data!;
 
@@ -108,8 +107,8 @@ class ReservationCardWidget extends StatelessWidget {
           background: Container(
             color: Colors.red,
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Icon(Icons.delete, color: Colors.white),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: const Icon(Icons.delete, color: Colors.white),
           ),
           direction: DismissDirection.endToStart,
           onDismissed: (direction) {
@@ -173,7 +172,7 @@ class ReservationCardWidget extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () => _navigateToEditForm(context),
                       ),
                     ],
