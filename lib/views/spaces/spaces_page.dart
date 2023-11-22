@@ -32,7 +32,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
         backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
         centerTitle: true,
         title: Image.asset(
-          'assets/UnivalleLogo2.png',
+          'assets/UnivalleNav.png',
           fit: BoxFit.contain,
           height: 80,
           color: Colors.white,

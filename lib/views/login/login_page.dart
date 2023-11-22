@@ -54,8 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value!),
                       ),

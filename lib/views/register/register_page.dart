@@ -57,8 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) {
                           if (value?.isEmpty ?? true) {
                             return 'Por favor ingrese un nombre de usuario';
@@ -72,8 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value ?? ''),
                       ),
