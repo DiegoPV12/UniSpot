@@ -20,6 +20,21 @@ class _ProfilePageState extends State<ProfilePage> {
   final ReservationService reservationService = ReservationService.instance;
   final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
+  void refreshReservations() {
+    setState(() {
+      // Esto reconstruirá el widget y volverá a buscar las reservas
+    });
+  }
+
+  void _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacementNamed('/login');
+    } catch (e) {
+      print('Error al cerrar sesión: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +46,12 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontWeight: FontWeight.w100),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => _signOut(context),
+          ),
+        ],
       ),
       bottomNavigationBar: CustomNavigationBar(
         currentIndex: 1,
@@ -60,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
               future: reservationService.getReservationsByUserId(currentUserUid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color:Color.fromRGBO(129, 40, 75, 1) ,));
+                  return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(129, 40, 75, 1),));
                 }
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
@@ -72,7 +93,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 return ListView.builder(
                   itemCount: reservations.length,
                   itemBuilder: (context, index) {
-                    return ReservationCardWidget(reservation: reservations[index]);
+                    return ReservationCardWidget(
+                      reservation: reservations[index],
+                      onReservationCancelled: refreshReservations,
+                    );
                   },
                 );
               },

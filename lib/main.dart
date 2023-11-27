@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:unispot/services/space_service.dart';
 import 'views/register/register_page.dart';
 import 'views/spaces/bloc/spaces_bloc.dart';
+import 'views/login/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
- 
   await initializeDateFormatting('es_ES', null); 
 
   runApp(const MyApp());
@@ -40,6 +40,9 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Inter',
         ),
         home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        routes: {
+          '/login': (context) => LoginPage(),
+        },
       ),
     );
   }

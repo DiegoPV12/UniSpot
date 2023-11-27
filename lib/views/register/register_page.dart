@@ -57,6 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _usernameController,
+                        maxLength: 20,
                         decoration: BaseInputDecoration()
                             .getDecoration(),
                         validator: (value) {
@@ -72,6 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
+                        maxLength: 40,
                         decoration: BaseInputDecoration()
                             .getDecoration(),
                         validator: (value) =>
@@ -83,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _passwordController,
+                        maxLength: 20,
                         obscureText: !_isPasswordVisible,
                         decoration: PasswordInputDecoration().getDecoration(
                           hintText: 'Contraseña',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unispot/widgets/shared/navbar.dart';
 import 'package:unispot/widgets/spaces/skeleton_card.dart';
 import '../../widgets/shared/chip_widget.dart';
@@ -7,6 +8,7 @@ import '../../widgets/spaces/spaces_widget.dart';
 import 'bloc/spaces_bloc.dart';
 import 'bloc/spaces_event.dart';
 import 'bloc/spaces_state.dart';
+import 'admin_page.dart';
 
 class SpacesListPage extends StatefulWidget {
   const SpacesListPage({super.key});
@@ -27,6 +29,8 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser; // Obtiene el usuario actual
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
@@ -37,6 +41,18 @@ class _SpacesListPageState extends State<SpacesListPage> {
           height: 80,
           color: Colors.white,
         ),
+        actions: <Widget>[
+          // Validación para mostrar el botón solo si el usuario es el administrador
+          if (user != null && user.email == 'tbp6000372@est.univalle.edu')
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AdminPage(), // Navega a AdminPage
+                ));
+              },
+            ),
+        ],
       ),
       bottomNavigationBar: CustomNavigationBar(
         currentIndex: 0,
