@@ -19,11 +19,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final UserService userService = UserService.instance;
   final ReservationService reservationService = ReservationService.instance;
   final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+  String selectedFilter = 'Todas';
 
   void refreshReservations() {
-    setState(() {
-      // Esto reconstruirá el widget y volverá a buscar las reservas
-    });
+    setState(() {});
   }
 
   void _signOut(BuildContext context) async {
@@ -76,6 +75,25 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
           const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: selectedFilter,
+              items: <String>['Todas', 'Pendientes', 'Aprobadas', 'Rechazadas', 'Canceladas']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedFilter = newValue!;
+                });
+              },
+            ),
+          ),
           Expanded(
             child: FutureBuilder<List<ReservationModel>>(
               future: reservationService.getReservationsByUserId(currentUserUid),
@@ -90,6 +108,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   return const Center(child: Text('No hay reservas.'));
                 }
                 List<ReservationModel> reservations = snapshot.data!;
+                reservations.sort((a, b) => b.day.compareTo(a.day)); // Ordena por fecha más reciente
+
+                reservations = reservations.where((reservation) {
+                  switch (selectedFilter) {
+                    case 'Pendientes':
+                      return reservation.status == 'pending';
+                    case 'Aprobadas':
+                      return reservation.status == 'approved';
+                    case 'Rechazadas':
+                    case 'Canceladas':
+                      return reservation.status == 'rejected' || reservation.status == 'cancelled';
+                    case 'Todas':
+                    default:
+                      return true;
+                  }
+                }).toList();
+
                 return ListView.builder(
                   itemCount: reservations.length,
                   itemBuilder: (context, index) {
