@@ -124,18 +124,4 @@ class ReservationService {
         .map((doc) => ReservationModel.fromDocument(doc))
         .toList();
   }
-
-  Future<void> changeReservationStatus(String reservationId, String newStatus) async {
-    await FirebaseFirestore.instance
-        .collection('reservations')
-        .doc(reservationId)
-        .update({'status': newStatus});
-  }
-
-   Future<List<ReservationModel>> getAllReservations() async {
-    QuerySnapshot querySnapshot = await reservationsRef.get();
-    return querySnapshot.docs
-        .map((doc) => ReservationModel.fromDocument(doc))
-        .toList();
-  }
 }
