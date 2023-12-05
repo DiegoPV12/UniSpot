@@ -138,4 +138,14 @@ class ReservationService {
         .map((doc) => ReservationModel.fromDocument(doc))
         .toList();
   }
+
+  Future<List<ReservationModel>> getApprovedReservations() async {
+    QuerySnapshot querySnapshot = await reservationsRef
+        .where('status', isEqualTo: 'approved')
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => ReservationModel.fromDocument(doc))
+        .toList();
+  }
 }

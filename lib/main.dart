@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
+      providers: [ 
         Provider<SpacesBloc>(
           create: (context) => SpacesBloc(spaceService: SpaceService.instance),
           dispose: (context, bloc) => bloc.close(),

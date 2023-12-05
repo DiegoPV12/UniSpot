@@ -6,7 +6,7 @@ class SpaceModel {
   final int capacity;
   final String description;
   final String type;
-  final String imageUrl;
+  final List<String> imageUrl;  // Ahora es una lista de URLs
   final List<String> availableTimeSlots;
 
   SpaceModel({
@@ -15,18 +15,18 @@ class SpaceModel {
     required this.capacity,
     required this.description,
     required this.type,
-    this.imageUrl = '',
+    this.imageUrl = const [],
     required this.availableTimeSlots,
   });
 
-  factory SpaceModel.fromDocument(DocumentSnapshot doc) {
+  factory SpaceModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     return SpaceModel(
-      uid: doc['uid'],
+      uid: doc.id,
       name: doc['name'],
       capacity: doc['capacity'],
       description: doc['description'],
       type: doc['type'],
-      imageUrl: doc['imageUrl'],
+      imageUrl: List<String>.from(doc['imageUrl']),
       availableTimeSlots: List<String>.from(doc['availableTimeSlots']),
     );
   }

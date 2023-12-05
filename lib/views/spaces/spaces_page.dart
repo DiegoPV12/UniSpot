@@ -29,7 +29,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser; // Obtiene el usuario actual
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,13 +42,12 @@ class _SpacesListPageState extends State<SpacesListPage> {
           color: Colors.white,
         ),
         actions: <Widget>[
-          // Validación para mostrar el botón solo si el usuario es el administrador
           if (user != null && user.email == 'tbp6000372@est.univalle.edu')
             IconButton(
               icon: Icon(Icons.settings, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AdminPage(), // Navega a AdminPage
+                  builder: (context) => AdminPage(),
                 ));
               },
             ),
@@ -63,8 +62,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 30.0, bottom: 15.0, left: 15.0, right: 15.0),
+              padding: const EdgeInsets.only(top: 30.0, bottom: 15.0, left: 15.0, right: 15.0),
               child: SizedBox(
                 height: 50,
                 child: ListView(
@@ -76,9 +74,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
                       onSelected: () => _handleChipSelected('Exteriores'),
                     ),
                     ChipWidget(
-                      type: 'Sala de Computo',
-                      isSelected: _selectedType == 'Sala de Computo',
-                      onSelected: () => _handleChipSelected('Sala de Computo'),
+                      type: 'Centro de Computo',
+                      isSelected: _selectedType == 'Centro de Computo',
+                      onSelected: () => _handleChipSelected('Centro de Computo'),
                     ),
                     ChipWidget(
                       type: 'Auditorios',
@@ -95,37 +93,33 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 4.0,
                     ),
                     itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return const SpaceSkeletonCard();
-                    },
+                    itemBuilder: (context, index) => const SpaceSkeletonCard(),
                   );
                 } else if (state is SpacesLoaded) {
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 4.0,
                     ),
                     itemCount: state.spaces.length,
-                    itemBuilder: (context, index) {
-                      return SpaceCardWidget(space: state.spaces[index]);
-                    },
+                    itemBuilder: (context, index) => SpaceCardWidget(
+                      space: state.spaces[index],
+                      uid: state.spaces[index].uid, // Incluyendo el UID
+                    ),
                   );
                 } else if (state is SpacesError) {
                   return Center(child: Text('Error: ${state.message}'));
                 }
-                return const Center(
-                    child: Text('Seleccione un tipo de espacio.'));
+                return const Center(child: Text('Seleccione un tipo de espacio.'));
               },
             ),
           ],

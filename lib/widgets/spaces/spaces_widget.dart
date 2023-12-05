@@ -6,12 +6,14 @@ class SpaceCardWidget extends StatelessWidget {
   final SpaceModel space;
   final double imageWidth;
   final double imageHeight;
+  final String uid; // Parámetro adicional para el UID
 
   const SpaceCardWidget({
     super.key,
     required this.space,
     this.imageWidth = 200.0,
     this.imageHeight = 200.0,
+    required this.uid, // Incluir el UID en el constructor
   });
 
   @override
@@ -33,7 +35,7 @@ class SpaceCardWidget extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               Image.network(
-                space.imageUrl,
+                space.imageUrl.isNotEmpty ? space.imageUrl[0] : 'assets/placeholder.jpg',
                 width: imageWidth,
                 height: imageHeight,
                 fit: BoxFit.cover,
@@ -50,13 +52,25 @@ class SpaceCardWidget extends StatelessWidget {
                 width: imageWidth,
                 color: const Color.fromARGB(255, 233, 201, 213),
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  space.name,
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 129, 40, 75),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      space.name,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 129, 40, 75),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text( // Mostrando el UID
+                      uid,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Color.fromARGB(255, 129, 40, 75),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

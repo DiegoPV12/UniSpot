@@ -20,7 +20,17 @@ class SpaceService {
         'name': space.name,
         'capacity': space.capacity,
         'description': space.description,
-        'imageURL': 'assets/UnivalleLogo.png',
+        'type': space.type,
+        'imageUrl': space.imageUrl,  // Guarda la lista de URLs
+        'availableTimeSlots': space.availableTimeSlots
+      });
+    } else {
+      await spacesRef.doc(space.uid).update({
+        'name': space.name,
+        'capacity': space.capacity,
+        'description': space.description,
+        'type': space.type,
+        'imageUrl': space.imageUrl,  // Actualiza la lista de URLs
         'availableTimeSlots': space.availableTimeSlots
       });
     }
@@ -28,32 +38,23 @@ class SpaceService {
 
   Future<SpaceModel> getSpaceFromFirestore(String uid) async {
     DocumentSnapshot doc = await spacesRef.doc(uid).get();
-    if (doc.exists) {
-      return SpaceModel.fromDocument(doc);
-    }
-    throw Exception('El espacio no existe');
+    return SpaceModel.fromDocumentSnapshot(doc);
   }
 
-  Future<List<SpaceModel>> filterSpacesByType(String type) async {
-    QuerySnapshot querySnapshot =
-        await spacesRef.where('type', isEqualTo: type).get();
-    return querySnapshot.docs
-        .map((doc) => SpaceModel.fromDocument(doc))
-        .toList();
-  }
 
   Future<List<SpaceModel>> loadAllSpaces() async {
     QuerySnapshot querySnapshot = await spacesRef.get();
     return querySnapshot.docs
-        .map((doc) => SpaceModel.fromDocument(doc))
+        .map((doc) => SpaceModel.fromDocumentSnapshot(doc))
         .toList();
   }
 
-  Future<void> updateSpace(SpaceModel space) async {
-    await spacesRef.doc(space.uid).update(space.toMap());
+  Future<List<SpaceModel>> filterSpacesByType(String type) async {
+    QuerySnapshot querySnapshot = 
+        await spacesRef.where('type', isEqualTo: type).get();
+    return querySnapshot.docs
+        .map((doc) => SpaceModel.fromDocumentSnapshot(doc))
+        .toList();
   }
-
-  Future<void> deleteSpace(String uid) async {
-    await spacesRef.doc(uid).delete();
-  }
+  // Aquí puedes incluir otros métodos que necesites para SpaceService
 }
