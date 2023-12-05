@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:table_calendar/table_calendar.dart';
 import '../../models/reservation_model.dart';
 import '../../services/reservation_service.dart';
-import '../../widgets/profile/profile_widget.dart';
-import '../../models/user_model.dart';
-import '../../services/user_service.dart';
 import '/widgets/profile/admin_reservation_card.dart';
 
 class AdminPage extends StatefulWidget {
@@ -16,9 +13,29 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final UserService userService = UserService.instance;
   final ReservationService reservationService = ReservationService.instance;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   String selectedFilter = 'Todas';
+  Set<DateTime> daysWithApprovedReservations = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadApprovedReservations();
+  }
+
+  void _loadApprovedReservations() async {
+    var approvedReservations = await reservationService.getApprovedReservations();
+    setState(() {
+      daysWithApprovedReservations.clear();
+      for (var reservation in approvedReservations) {
+        DateTime date = reservation.day.toDate();
+        daysWithApprovedReservations.add(DateTime(date.year, date.month, date.day));
+      }
+    });
+  }
 
   void refreshReservations() {
     setState(() {});
@@ -61,21 +78,66 @@ class _AdminPageState extends State<AdminPage> {
       ),
       body: Column(
         children: [
-          FutureBuilder<UserModel>(
-            future: userService.getUserFromFirestore(FirebaseAuth.instance.currentUser!.uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _buildLoadingIndicator();
-              }
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Text('Usuario no disponible');
-              }
-              UserModel adminUser = snapshot.data!;
-              return ProfileWidget(user: adminUser);
-            },
+          Container(
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (daysWithApprovedReservations.contains(DateTime(date.year, date.month, date.day))) {
+                    return Positioned(
+                      right: 1,
+                      bottom: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        width: 7.0,
+                        height: 7.0,
+                      ),
+                    );
+                  }
+                  return null;
+                },
+              ),
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: Color.fromARGB(255, 233, 201, 213),
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  shape: BoxShape.circle,
+                ),
+                // Otros estilos del calendario...
+              ),
+              // Resto de las propiedades del TableCalendar...
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import '../../models/space_model.dart';
 import '../reservation_form/reservation_form.dart';
 
@@ -6,9 +7,9 @@ class SpaceDetailsPage extends StatelessWidget {
   final SpaceModel space;
 
   const SpaceDetailsPage({
-    super.key,
+    Key? key,
     required this.space,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +22,35 @@ class SpaceDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 500,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(150.0),
-                ),
-                child: Image.network(
-                  space.imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      'assets/UnivalleLogo.png',
+            CarouselSlider.builder(
+              itemCount: space.imageUrl.length, // Se adapta al número de imágenes en la lista
+              itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                Container(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(150.0),
+                    ),
+                    child: Image.network(
+                      space.imageUrl[itemIndex], // Muestra la imagen específica de la lista
                       fit: BoxFit.cover,
-                    );
-                  },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/UnivalleLogo.png',
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
                 ),
+              options: CarouselOptions(
+                height: 500.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                aspectRatio: 16/9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                viewportFraction: 0.8,
               ),
             ),
             Container(
@@ -68,8 +82,7 @@ class SpaceDetailsPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ReservationDetailsForm(space: space, reservation: null)),
+                        builder: (context) => ReservationDetailsForm(space: space, reservation: null)),
                     );
                   },
                   style: ElevatedButton.styleFrom(

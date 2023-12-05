@@ -9,6 +9,7 @@ import '../../services/space_service.dart';
 import '../../services/reservation_service.dart';
 import '../../services/user_service.dart';
 import '../../models/user_model.dart';
+import '../../services/email_service.dart';
 
 class AdminReservationCardWidget extends StatelessWidget {
   final ReservationModel reservation;
@@ -30,14 +31,23 @@ class AdminReservationCardWidget extends StatelessWidget {
     return DateFormat('HH:mm', 'es').format(date);
   }
 
-  void _changeReservationStatus(BuildContext context, String newStatus) {
+  void _changeReservationStatus(
+      BuildContext context, String newStatus, String userEmail) {
     ReservationService.instance
         .changeReservationStatus(reservation.uid, newStatus)
         .then((_) {
-          onReservationChanged();
-        }).catchError((error) {
-          // Manejar el error
-        });
+      // Notificar al usuario por correo electrónico
+      EmailService.sendEmail(
+        to: userEmail, // Usa el correo electrónico pasado como parámetro
+        subject: 'Estado de tu Reserva en UniSpot',
+        body: 'Tu reserva ha sido ' +
+            (newStatus == 'approved' ? 'aprobada' : 'rechazada') +
+            '.',
+      );
+      onReservationChanged();
+    }).catchError((error) {
+      // Manejar el error
+    });
   }
 
   @override
@@ -72,47 +82,136 @@ class AdminReservationCardWidget extends StatelessWidget {
             return Card(
               color: Colors.white,
               elevation: 2,
-              margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      space.name,
+                      '${space.name}: ${space.uid}',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Divider(),
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.calendar, size: 16),
-                        SizedBox(width: 8),
-                        Text('Fecha: ${_formatDateTime(reservation.day)}'),
-                      ],
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(CupertinoIcons.calendar, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Fecha: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: _formatDateTime(reservation.day)),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.clock, size: 16),
-                        SizedBox(width: 8),
-                        Text('Hora: ${_formatTime(reservation.startTime)} - ${_formatTime(reservation.endTime)}'),
-                      ],
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(CupertinoIcons.clock, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Hora: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                              text:
+                                  '${_formatTime(reservation.startTime)} - ${_formatTime(reservation.endTime)}'),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(Icons.person, size: 16),
-                        SizedBox(width: 8),
-                        Text('Usuario: ${user.username}'),
-                      ],
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.person, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Usuario: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: user.username),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 4),
-                    Text('Estado: ${reservation.status.toUpperCase()}'),
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.info_outline, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Estado: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: reservation.status.toUpperCase()),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 4),
-                    Text('Razón: ${reservation.reason}'),
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.rate_review, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Razón: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: reservation.reason),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.notes, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Notas adicionales: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: reservation.additionalNotes ?? 'N/A'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.build_circle, size: 16),
+                          ),
+                          TextSpan(
+                            text: ' Solicita material: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: reservation.useMaterial ? 'Sí' : 'No',
+                          ),
+                        ],
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -124,7 +223,10 @@ class AdminReservationCardWidget extends StatelessWidget {
                             ),
                             child: IconButton(
                               icon: Icon(Icons.check, color: Colors.white),
-                              onPressed: () => _changeReservationStatus(context, 'approved'),
+                              onPressed: () => _changeReservationStatus(
+                                  context,
+                                  'approved',
+                                  user.email), // Pasar el email del usuario
                             ),
                           ),
                           SizedBox(width: 8),
@@ -135,7 +237,10 @@ class AdminReservationCardWidget extends StatelessWidget {
                             ),
                             child: IconButton(
                               icon: Icon(Icons.close, color: Colors.white),
-                              onPressed: () => _changeReservationStatus(context, 'rejected'),
+                              onPressed: () => _changeReservationStatus(
+                                  context,
+                                  'rejected',
+                                  user.email), // Pasar el email del usuario
                             ),
                           ),
                         ],

@@ -54,7 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: BaseInputDecoration().getDecoration(),
+                        maxLength: 50,
+                        decoration: BaseInputDecoration()
+                            .getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value!),
                       ),
@@ -64,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _passwordController,
+                        maxLength: 20,
                         obscureText: !_isPasswordVisible,
                         decoration: PasswordInputDecoration().getDecoration(
                           hintText: 'Contraseña',

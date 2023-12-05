@@ -11,7 +11,7 @@ class ReservationModel {
   final String additionalNotes;
   final bool useMaterial;
   final Timestamp day;
-  final String? timeSlot;  // Descomentar si necesitas este campo
+  final String? timeSlot;  
 
   ReservationModel({
     required this.uid,
@@ -24,7 +24,7 @@ class ReservationModel {
     this.additionalNotes = '',
     required this.useMaterial,
     required this.day,
-    this.timeSlot,  // Descomentar si agregas este campo
+    this.timeSlot,
   });
 
  factory ReservationModel.fromDocument(DocumentSnapshot doc) {
@@ -55,7 +55,7 @@ class ReservationModel {
       'additionalNotes': additionalNotes,
       'useMaterial': useMaterial,
       'day': day,
-      'timeSlot': timeSlot,  // Descomentar si agregas este campo
+      'timeSlot': timeSlot, 
     };
   }
 
@@ -71,7 +71,7 @@ class ReservationModel {
     String? additionalNotes,
     bool? useMaterial,
     Timestamp? day,
-    String? timeSlot,  // Descomentar si agregas este campo
+    String? timeSlot, 
   }) {
     return ReservationModel(
       uid: uid ?? this.uid,
@@ -84,7 +84,7 @@ class ReservationModel {
       additionalNotes: additionalNotes ?? this.additionalNotes,
       useMaterial: useMaterial ?? this.useMaterial,
       day: day ?? this.day,
-      timeSlot: timeSlot ?? this.timeSlot,  // Descomentar si agregas este campo
+      timeSlot: timeSlot ?? this.timeSlot,  
     );
   }
 }

@@ -104,7 +104,9 @@ class ReservationCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: NetworkImage(space.imageUrl),
+                  backgroundImage: NetworkImage(space.imageUrl.isNotEmpty
+                      ? space.imageUrl[0]
+                      : 'assets/placeholder.jpg'),
                   radius: 35.0,
                 ),
                 Expanded(

@@ -8,12 +8,12 @@ import 'notification.dart';
 
 class ReservationDetailsForm extends StatefulWidget {
   final SpaceModel space;
-  final ReservationModel? reservation;  // Haciendo reservation opcional
+  final ReservationModel? reservation;
 
   const ReservationDetailsForm({
     super.key,
     required this.space,
-    this.reservation,  // No se requiere que sea 'required'
+    this.reservation,
   });
 
   @override
@@ -22,7 +22,8 @@ class ReservationDetailsForm extends StatefulWidget {
 
 class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
   final TextEditingController _reasonController = TextEditingController();
-  final TextEditingController _additionalNotesController = TextEditingController();
+  final TextEditingController _additionalNotesController =
+      TextEditingController();
   String? selectedTimeSlot;
   bool useMaterial = false;
   final inputDecoration = ReservationInputDecoration();
@@ -33,12 +34,20 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
     if (widget.reservation != null) {
+      DateTime reservationDate = widget.reservation!.day.toDate();
+      if (reservationDate.isBefore(now)) {
+        selectedDate = now;
+      } else {
+        selectedDate = reservationDate;
+      }
       _reasonController.text = widget.reservation!.reason;
       _additionalNotesController.text = widget.reservation!.additionalNotes;
-      selectedTimeSlot = widget.reservation!.timeSlot;  // Asumiendo que ReservationModel tiene este campo
+      selectedTimeSlot = widget.reservation!.timeSlot;
       useMaterial = widget.reservation!.useMaterial;
-      selectedDate = widget.reservation!.day.toDate();
+    } else {
+      selectedDate = now;
     }
   }
 
@@ -116,6 +125,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                 padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                   controller: _reasonController,
+                  maxLength: 250,
                   cursorColor: const Color.fromARGB(255, 129, 40, 75),
                   decoration: inputDecoration.getDecoration(
                       hintText: 'Razón de la Reserva'),
@@ -127,6 +137,7 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                 padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                   controller: _additionalNotesController,
+                  maxLength: 250,
                   cursorColor: const Color.fromARGB(255, 129, 40, 75),
                   decoration: inputDecoration.getDecoration(
                       hintText: 'Detalles Adicionales'),
@@ -182,14 +193,16 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
 
       if (widget.reservation == null) {
         // Crear nueva reserva
-        ReservationService.instance.createReservation(
+        ReservationService.instance
+            .createReservation(
           spaceId: widget.space.uid,
           reason: _reasonController.text,
           additionalNotes: _additionalNotesController.text,
           timeSlot: selectedTimeSlot,
           useMaterial: useMaterial,
           day: day,
-        ).then((_) {
+        )
+            .then((_) {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const NotificationPage()),
           );
@@ -211,14 +224,17 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
           day: day,
         );
 
-        ReservationService.instance.updateReservation(updatedReservation).then((_) {
+        ReservationService.instance
+            .updateReservation(updatedReservation)
+            .then((_) {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const NotificationPage()),
           );
         }).catchError((error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error al actualizar la reserva: ${error.toString()}'),
+              content:
+                  Text('Error al actualizar la reserva: ${error.toString()}'),
               backgroundColor: Colors.red,
             ),
           );

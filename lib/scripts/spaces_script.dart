@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:unispot/firebase_options.dart';
 import 'package:unispot/models/space_model.dart';
 
@@ -14,144 +13,82 @@ Future<void> main() async {
   var batch = FirebaseFirestore.instance.batch();
 
   var dummySpaces = [
+    // Espacios de computo
     SpaceModel(
       uid: 'T-001',
-      name: 'Sala de Computo',
+      name: 'Centro de Computo 1',
       capacity: 50,
       description: 'Amplia sala con proyector y aire acondicionado.',
-      type: 'Sala de Computo',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo.png?alt=media&token=a21add67-d4cf-475a-a16f-0af429a5b81f&_gl=1*662r6s*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxNDYuNjAuMC4w',
+      type: 'Centro de Computo',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
+      ],
       availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
+    SpaceModel(
+      uid: 'T-002',
+      name: 'Centro de Computo 1',
+      capacity: 50,
+      description: 'Amplia sala con proyector y aire acondicionado.',
+      type: 'Centro de Computo',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
+      ],
+      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
+    ),
+    SpaceModel(
+      uid: 'T-003',
+      name: 'Centro de Computo 1',
+      capacity: 50,
+      description: 'Amplia sala con proyector y aire acondicionado.',
+      type: 'Centro de Computo',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
+      ],
+      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
+    ),
+    SpaceModel(
+      uid: 'T-004',
+      name: 'Centro de Computo 1',
+      capacity: 50,
+      description: 'Amplia sala con proyector y aire acondicionado.',
+      type: 'Centro de Computo',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
+      ],
+      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
+    ),
+    
+
+    // Cancha de Fútbol
     SpaceModel(
       uid: 'CH-001',
       name: 'Cancha de Fútbol',
       capacity: 50,
       description: 'Cancha de Fútbol 7 con pasto artificial.',
       type: 'Exteriores',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha.png?alt=media&token=2c149422-448e-4d56-92c5-4065777c84ee&_gl=1*1k5yciu*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxMjIuMTcuMC4w',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha2.jpeg?alt=media&token=f14e8f8b-4452-4a9d-aaad-7ee726fb2259',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha3.png?alt=media&token=8a90d762-6706-4133-ad1f-afc185e55a09'
+      ],
       availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
-    SpaceModel(
-      uid: 'T-002',
-      name: 'Sala de Computo',
-      capacity: 50,
-      description: 'Amplia sala con proyector y aire acondicionado.',
-      type: 'Sala de Computo',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo.png?alt=media&token=a21add67-d4cf-475a-a16f-0af429a5b81f&_gl=1*662r6s*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxNDYuNjAuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'T-002',
-      name: 'Sala de Computo',
-      capacity: 50,
-      description: 'Amplia sala con proyector y aire acondicionado.',
-      type: 'Sala de Computo',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo.png?alt=media&token=a21add67-d4cf-475a-a16f-0af429a5b81f&_gl=1*662r6s*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxNDYuNjAuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'T-003',
-      name: 'Sala de Computo',
-      capacity: 50,
-      description: 'Amplia sala con proyector y aire acondicionado.',
-      type: 'Sala de Computo',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo.png?alt=media&token=a21add67-d4cf-475a-a16f-0af429a5b81f&_gl=1*662r6s*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxNDYuNjAuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'T-005',
-      name: 'Sala de Computo',
-      capacity: 50,
-      description: 'Amplia sala con proyector y aire acondicionado.',
-      type: 'Sala de Computo',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo.png?alt=media&token=a21add67-d4cf-475a-a16f-0af429a5b81f&_gl=1*662r6s*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxNDYuNjAuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'CH-002',
-      name: 'Cancha de Fútbol',
-      capacity: 50,
-      description: 'Cancha de Fútbol 7 con pasto artificial.',
-      type: 'Exteriores',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha.png?alt=media&token=2c149422-448e-4d56-92c5-4065777c84ee&_gl=1*1k5yciu*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxMjIuMTcuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'CH-003',
-      name: 'Cancha de Fútbol',
-      capacity: 50,
-      description: 'Cancha de Fútbol 7 con pasto artificial.',
-      type: 'Exteriores',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha.png?alt=media&token=2c149422-448e-4d56-92c5-4065777c84ee&_gl=1*1k5yciu*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxMjIuMTcuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'CH-004',
-      name: 'Cancha de Fútbol',
-      capacity: 50,
-      description: 'Cancha de Fútbol 7 con pasto artificial.',
-      type: 'Exteriores',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha.png?alt=media&token=2c149422-448e-4d56-92c5-4065777c84ee&_gl=1*1k5yciu*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxMjIuMTcuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'CH-005',
-      name: 'Cancha de Fútbol',
-      capacity: 50,
-      description: 'Cancha de Fútbol 7 con pasto artificial.',
-      type: 'Exteriores',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha.png?alt=media&token=2c149422-448e-4d56-92c5-4065777c84ee&_gl=1*1k5yciu*_ga*MTcyOTI3MjcwOC4xNjk3MTUxODYy*_ga_CW55HF8NVT*MTY5OTQxMzgwMi4yMi4xLjE2OTk0MTcxMjIuMTcuMC4w',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
+
+    // Auditorios
     SpaceModel(
       uid: 'AU-001',
-      name: 'Auditorio',
-      capacity: 50,
-      description: 'Auditorio de excelente acustica',
+      name: 'Auditorio Principal',
+      capacity: 200,
+      description: 'Auditorio de excelente acustica y gran capacidad.',
       type: 'Auditorios',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2Fauditorio.png?alt=media&token=1391ff98-528a-4122-b6a8-ee2d5d1d2024',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'AU-002',
-      name: 'Auditorio',
-      capacity: 50,
-      description: 'Auditorio de excelente acustica',
-      type: 'Auditorios',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2Fauditorio.png?alt=media&token=1391ff98-528a-4122-b6a8-ee2d5d1d2024',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'AU-003',
-      name: 'Auditorio',
-      capacity: 50,
-      description: 'Auditorio de excelente acustica',
-      type: 'Auditorios',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2Fauditorio.png?alt=media&token=1391ff98-528a-4122-b6a8-ee2d5d1d2024',
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
-    ),
-    SpaceModel(
-      uid: 'AU-004',
-      name: 'Auditorio',
-      capacity: 50,
-      description: 'Auditorio de excelente acustica',
-      type: 'Auditorios',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2Fauditorio.png?alt=media&token=1391ff98-528a-4122-b6a8-ee2d5d1d2024',
+      imageUrl: [
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FAuditorio2.png?alt=media&token=93fcfd6d-0de8-493e-9df0-d8193ed00cd8',
+        'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FAuditorio3.png?alt=media&token=e39e0c7a-145b-4ce9-b694-d059f3c2190b'
+      ],
       availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
   ];
