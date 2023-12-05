@@ -56,7 +56,7 @@ class AdminReservationCardWidget extends StatelessWidget {
       future: SpaceService.instance.getSpaceFromFirestore(reservation.spaceId),
       builder: (context, spaceSnapshot) {
         if (spaceSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(129, 40, 75, 1),));
         }
         if (spaceSnapshot.hasError) {
           return Center(child: Text('Error: ${spaceSnapshot.error}'));
@@ -70,7 +70,7 @@ class AdminReservationCardWidget extends StatelessWidget {
           future: UserService.instance.getUserFromFirestore(reservation.userId),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(129, 40, 75, 1),));
             }
             if (userSnapshot.hasError || !userSnapshot.hasData) {
               return const Center(child: Text('Usuario no disponible'));
