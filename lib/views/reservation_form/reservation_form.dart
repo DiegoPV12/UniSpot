@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:unispot/models/reservation_model.dart';
@@ -29,6 +31,8 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
   final inputDecoration = ReservationInputDecoration();
 
   DateTime selectedDate = DateTime.now();
+  TimeOfDay? _selectedStartTime;
+  TimeOfDay? _selectedEndTime;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -100,25 +104,45 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: DropdownButtonFormField<String>(
-                  value: selectedTimeSlot,
-                  decoration:
-                      inputDecoration.getDecoration(hintText: 'Horario'),
-                  items: widget.space.availableTimeSlots
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedTimeSlot = newValue;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? 'Seleccione un horario' : null,
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 150,
+                      child: GestureDetector(
+                        onTap: () => _selectStartTime(context),
+                        child: AbsorbPointer(
+                          child: TextFormField(
+                            decoration: inputDecoration.getDecoration(
+                                hintText: 'Inicio'),
+                            controller: TextEditingController(
+                              text: _selectedStartTime != null
+                                  ? _selectedStartTime!.format(context)
+                                  : '',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: GestureDetector(
+                        onTap: () => _selectEndTime(context),
+                        child: AbsorbPointer(
+                          child: TextFormField(
+                            decoration: inputDecoration.getDecoration(
+                                hintText: 'Finalizacion'),
+                            controller: TextEditingController(
+                              text: _selectedEndTime != null
+                                  ? _selectedEndTime!.format(context)
+                                  : '',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -187,9 +211,102 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
     );
   }
 
+  Future<void> _selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedStartTime ?? TimeOfDay.now(),
+      initialEntryMode: TimePickerEntryMode.dial,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: Theme(
+            data: ThemeData(
+              colorScheme: ColorScheme.light(
+                primary: const Color.fromARGB(255, 129, 40, 75),
+                onPrimary: Colors.white,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color.fromARGB(255, 129, 40, 75),
+                ),
+              ),
+            ),
+            child: child!,
+          ),
+        );
+      },
+    );
+    if (picked != null && picked != _selectedStartTime) {
+      setState(() {
+        _selectedStartTime = picked;
+      });
+    }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedEndTime ?? (_selectedStartTime ?? TimeOfDay.now()),
+      initialEntryMode: TimePickerEntryMode.dial,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: Theme(
+            data: ThemeData(
+              colorScheme: ColorScheme.light(
+                primary: const Color.fromARGB(255, 129, 40, 75),
+                onPrimary: Colors.white,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color.fromARGB(255, 129, 40, 75),
+                ),
+              ),
+            ),
+            child: child!,
+          ),
+        );
+      },
+    );
+    if (picked != null) {
+      if (_selectedStartTime != null &&
+          (picked.hour < _selectedStartTime!.hour ||
+              (picked.hour == _selectedStartTime!.hour &&
+                  picked.minute < _selectedStartTime!.minute))) {
+        // Mostrar un error si la hora de finalización es anterior a la hora de inicio
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'La hora de finalización no puede ser anterior a la hora de inicio.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        setState(() {
+          _selectedEndTime = picked;
+        });
+      }
+    }
+  }
+
   void _submitReservation(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      Timestamp day = Timestamp.fromDate(selectedDate);
+      // Convertir TimeOfDay a DateTime
+      DateTime startDateTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        _selectedStartTime?.hour ?? 0,
+        _selectedStartTime?.minute ?? 0,
+      );
+      DateTime endDateTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        _selectedEndTime?.hour ?? 0,
+        _selectedEndTime?.minute ?? 0,
+      );
 
       if (widget.reservation == null) {
         // Crear nueva reserva
@@ -198,9 +315,10 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
           spaceId: widget.space.uid,
           reason: _reasonController.text,
           additionalNotes: _additionalNotesController.text,
-          timeSlot: selectedTimeSlot,
           useMaterial: useMaterial,
-          day: day,
+          day: selectedDate,
+          startTime: TimeOfDay.fromDateTime(startDateTime),
+          endTime: TimeOfDay.fromDateTime(endDateTime),
         )
             .then((_) {
           Navigator.of(context).push(
@@ -219,9 +337,10 @@ class _ReservationDetailsFormState extends State<ReservationDetailsForm> {
         ReservationModel updatedReservation = widget.reservation!.copyWith(
           reason: _reasonController.text,
           additionalNotes: _additionalNotesController.text,
-          timeSlot: selectedTimeSlot,
           useMaterial: useMaterial,
-          day: day,
+          day: Timestamp.fromDate(selectedDate),
+          startTime: Timestamp.fromDate(startDateTime),
+          endTime: Timestamp.fromDate(endDateTime),
         );
 
         ReservationService.instance

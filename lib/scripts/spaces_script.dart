@@ -24,7 +24,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
     SpaceModel(
       uid: 'T-002',
@@ -36,7 +35,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
     SpaceModel(
       uid: 'T-003',
@@ -48,7 +46,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
     SpaceModel(
       uid: 'T-004',
@@ -60,7 +57,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo2.png?alt=media&token=0220d0b8-a063-41e9-8dc0-393c925adc14',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FComputo3.png?alt=media&token=a0bf7b20-c85f-40fe-b0ed-79538ac37359'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
     
 
@@ -75,7 +71,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha2.jpeg?alt=media&token=f14e8f8b-4452-4a9d-aaad-7ee726fb2259',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FCancha3.png?alt=media&token=8a90d762-6706-4133-ad1f-afc185e55a09'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
 
     // Auditorios
@@ -89,7 +84,6 @@ Future<void> main() async {
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FAuditorio2.png?alt=media&token=93fcfd6d-0de8-493e-9df0-d8193ed00cd8',
         'https://firebasestorage.googleapis.com/v0/b/univalle-reservation.appspot.com/o/spaces_images%2FAuditorio3.png?alt=media&token=e39e0c7a-145b-4ce9-b694-d059f3c2190b'
       ],
-      availableTimeSlots: ['9:00 - 11:00', '11:00 - 13:00'],
     ),
   ];
 
@@ -100,5 +94,6 @@ Future<void> main() async {
   }
 
   await batch.commit();
+  // ignore: avoid_print
   print('Todos los espacios han sido añadidos con éxito');
 }

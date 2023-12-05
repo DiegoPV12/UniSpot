@@ -22,7 +22,6 @@ class SpaceService {
         'description': space.description,
         'type': space.type,
         'imageUrl': space.imageUrl,  // Guarda la lista de URLs
-        'availableTimeSlots': space.availableTimeSlots
       });
     } else {
       await spacesRef.doc(space.uid).update({
@@ -31,7 +30,6 @@ class SpaceService {
         'description': space.description,
         'type': space.type,
         'imageUrl': space.imageUrl,  // Actualiza la lista de URLs
-        'availableTimeSlots': space.availableTimeSlots
       });
     }
   }

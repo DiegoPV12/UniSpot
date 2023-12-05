@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class BaseInputDecoration {
@@ -7,6 +6,7 @@ class BaseInputDecoration {
       fillColor: const Color.fromARGB(255, 233, 201, 213),
       filled: true,
       counterText: "",
+      floatingLabelBehavior: FloatingLabelBehavior.never,
       border: OutlineInputBorder(
         borderSide: BorderSide.none,
         borderRadius: BorderRadius.circular(12),

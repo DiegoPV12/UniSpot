@@ -53,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
                         child: Center(child: Text('Correo electrónico')),
                       ),
                       TextFormField(
+                        cursorColor: const Color.fromARGB(255, 129, 40, 75),
                         controller: _emailController,
                         maxLength: 50,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value!),
                       ),
@@ -65,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Center(child: Text('Contraseña')),
                       ),
                       TextFormField(
+                        cursorColor: const Color.fromARGB(255, 129, 40, 75),
                         controller: _passwordController,
                         maxLength: 20,
                         obscureText: !_isPasswordVisible,

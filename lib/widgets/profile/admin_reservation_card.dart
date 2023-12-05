@@ -40,9 +40,7 @@ class AdminReservationCardWidget extends StatelessWidget {
       EmailService.sendEmail(
         to: userEmail, // Usa el correo electrónico pasado como parámetro
         subject: 'Estado de tu Reserva en UniSpot',
-        body: 'Tu reserva ha sido ' +
-            (newStatus == 'approved' ? 'aprobada' : 'rechazada') +
-            '.',
+        body: 'Tu reserva ha sido ${newStatus == 'approved' ? 'aprobada' : 'rechazada'}.',
       );
       onReservationChanged();
     }).catchError((error) {
@@ -58,13 +56,13 @@ class AdminReservationCardWidget extends StatelessWidget {
       future: SpaceService.instance.getSpaceFromFirestore(reservation.spaceId),
       builder: (context, spaceSnapshot) {
         if (spaceSnapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         if (spaceSnapshot.hasError) {
           return Center(child: Text('Error: ${spaceSnapshot.error}'));
         }
         if (!spaceSnapshot.hasData) {
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         }
         SpaceModel space = spaceSnapshot.data!;
 
@@ -72,10 +70,10 @@ class AdminReservationCardWidget extends StatelessWidget {
           future: UserService.instance.getUserFromFirestore(reservation.userId),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (userSnapshot.hasError || !userSnapshot.hasData) {
-              return Center(child: Text('Usuario no disponible'));
+              return const Center(child: Text('Usuario no disponible'));
             }
             UserModel user = userSnapshot.data!;
 
@@ -91,20 +89,20 @@ class AdminReservationCardWidget extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       '${space.name}: ${space.uid}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(CupertinoIcons.calendar, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Fecha: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -112,15 +110,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(CupertinoIcons.clock, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Hora: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -130,15 +128,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.person, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Usuario: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -146,15 +144,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.info_outline, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Estado: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -162,15 +160,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.rate_review, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Razón: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -178,15 +176,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.notes, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Notas adicionales: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -194,15 +192,15 @@ class AdminReservationCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         style: DefaultTextStyle.of(context).style,
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.build_circle, size: 16),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' Solicita material: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -217,26 +215,26 @@ class AdminReservationCardWidget extends StatelessWidget {
                       children: [
                         if (reservation.status == 'pending') ...[
                           Ink(
-                            decoration: ShapeDecoration(
+                            decoration: const ShapeDecoration(
                               color: Colors.green,
                               shape: CircleBorder(),
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.check, color: Colors.white),
+                              icon: const Icon(Icons.check, color: Colors.white),
                               onPressed: () => _changeReservationStatus(
                                   context,
                                   'approved',
                                   user.email), // Pasar el email del usuario
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Ink(
-                            decoration: ShapeDecoration(
+                            decoration: const ShapeDecoration(
                               color: Colors.red,
                               shape: CircleBorder(),
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.close, color: Colors.white),
+                              icon: const Icon(Icons.close, color: Colors.white),
                               onPressed: () => _changeReservationStatus(
                                   context,
                                   'rejected',

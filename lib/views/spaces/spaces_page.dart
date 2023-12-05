@@ -44,10 +44,10 @@ class _SpacesListPageState extends State<SpacesListPage> {
         actions: <Widget>[
           if (user != null && user.email == 'tbp6000372@est.univalle.edu')
             IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
+              icon: const Icon(Icons.settings, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AdminPage(),
+                  builder: (context) => const AdminPage(),
                 ));
               },
             ),

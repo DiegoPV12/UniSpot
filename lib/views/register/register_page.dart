@@ -56,10 +56,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Center(child: Text('Nombre de usuario')),
                       ),
                       TextFormField(
+                        cursorColor: const Color.fromARGB(255, 129, 40, 75),
                         controller: _usernameController,
                         maxLength: 20,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) {
                           if (value?.isEmpty ?? true) {
                             return 'Por favor ingrese un nombre de usuario';
@@ -72,10 +72,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Center(child: Text('Correo electrónico')),
                       ),
                       TextFormField(
+                        cursorColor: const Color.fromARGB(255, 129, 40, 75),
                         controller: _emailController,
                         maxLength: 40,
-                        decoration: BaseInputDecoration()
-                            .getDecoration(),
+                        decoration: BaseInputDecoration().getDecoration(),
                         validator: (value) =>
                             _authService.validateEmail(value ?? ''),
                       ),
@@ -84,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Center(child: Text('Contraseña')),
                       ),
                       TextFormField(
+                        cursorColor: const Color.fromARGB(255, 129, 40, 75),
                         controller: _passwordController,
                         maxLength: 20,
                         obscureText: !_isPasswordVisible,

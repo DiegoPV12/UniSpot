@@ -25,6 +25,7 @@ class SpaceDetailsPage extends StatelessWidget {
             CarouselSlider.builder(
               itemCount: space.imageUrl.length, // Se adapta al número de imágenes en la lista
               itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                // ignore: avoid_unnecessary_containers
                 Container(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -49,7 +50,7 @@ class SpaceDetailsPage extends StatelessWidget {
                 aspectRatio: 16/9,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enableInfiniteScroll: true,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 viewportFraction: 0.8,
               ),
             ),

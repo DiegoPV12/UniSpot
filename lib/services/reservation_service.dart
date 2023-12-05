@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import '../models/reservation_model.dart';
 
 class ReservationService {
@@ -15,30 +16,50 @@ class ReservationService {
     required String spaceId,
     required String reason,
     String? additionalNotes,
-    String? timeSlot,
     required bool useMaterial,
-    required Timestamp day,
+    required DateTime day,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
   }) async {
-    Map<String, Timestamp> times = _convertTimeSlot(timeSlot, day);
+    // Convierte TimeOfDay a DateTime
+    DateTime startDateTime = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      startTime.hour,
+      startTime.minute,
+    );
+    DateTime endDateTime = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      endTime.hour,
+      endTime.minute,
+    );
 
+    // Verifica la disponibilidad antes de crear la reserva
     bool isAvailable = await _checkSpaceAvailability(
-        spaceId, times['startTime']!, times['endTime']!);
+        spaceId,
+        Timestamp.fromDate(startDateTime),
+        Timestamp.fromDate(endDateTime),
+    );
     if (!isAvailable) {
       throw Exception('El espacio ya está reservado para este horario');
     }
 
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
+    // Crea la reserva con Timestamps
     DocumentReference reservationRef = await reservationsRef.add({
       'userId': currentUserId,
       'spaceId': spaceId,
-      'startTime': times['startTime'],
-      'endTime': times['endTime'],
+      'startTime': Timestamp.fromDate(startDateTime),
+      'endTime': Timestamp.fromDate(endDateTime),
       'status': 'pending',
       'reason': reason,
       'additionalNotes': additionalNotes ?? '',
       'useMaterial': useMaterial,
-      'day': day,
+      'day': Timestamp.fromDate(day),
     });
 
     await reservationRef.update({
@@ -54,59 +75,22 @@ class ReservationService {
     await reservationsRef.doc(reservationId).delete();
   }
 
-  Map<String, Timestamp> _convertTimeSlot(String? timeSlot, Timestamp day) {
-    DateTime dayDate = day.toDate();
-    List<String> times = timeSlot!.split(' - ');
-    DateTime startTime = DateTime(dayDate.year, dayDate.month, dayDate.day,
-        int.parse(times[0].split(':')[0]), int.parse(times[0].split(':')[1]));
-    DateTime endTime = DateTime(dayDate.year, dayDate.month, dayDate.day,
-        int.parse(times[1].split(':')[0]), int.parse(times[1].split(':')[1]));
-
-    return {
-      'startTime': Timestamp.fromDate(startTime),
-      'endTime': Timestamp.fromDate(endTime),
-    };
-  }
-
   Future<bool> _checkSpaceAvailability(
       String spaceId, Timestamp startTime, Timestamp endTime) async {
-    DateTime startDate = DateTime(
-      startTime.toDate().year,
-      startTime.toDate().month,
-      startTime.toDate().day,
-    );
-    DateTime endDate = DateTime(
-      endTime.toDate().year,
-      endTime.toDate().month,
-      endTime.toDate().day,
-    );
-
-    QuerySnapshot snapshot =
-        await reservationsRef.where('spaceId', isEqualTo: spaceId).get();
+    QuerySnapshot snapshot = await reservationsRef
+        .where('spaceId', isEqualTo: spaceId)
+        .get();
 
     for (var doc in snapshot.docs) {
-      DateTime existingStart = DateTime(
-        doc['startTime'].toDate().year,
-        doc['startTime'].toDate().month,
-        doc['startTime'].toDate().day,
-      );
-      DateTime existingEnd = DateTime(
-        doc['endTime'].toDate().year,
-        doc['endTime'].toDate().month,
-        doc['endTime'].toDate().day,
-      );
-      String existingStatus = doc['status'];
+      DateTime existingStart = doc['startTime'].toDate();
+      DateTime existingEnd = doc['endTime'].toDate();
 
-      if (existingStatus != 'pending' &&
-          startDate.isAtSameMomentAs(existingStart) &&
-          endDate.isAtSameMomentAs(existingEnd)) {
-        if (!(endTime.seconds <= doc['startTime'].seconds ||
-            startTime.seconds >= doc['endTime'].seconds)) {
-          return false;
-        }
+      if (existingEnd.isAfter(startTime.toDate()) &&
+          existingStart.isBefore(endTime.toDate())) {
+        return false; // El espacio no está disponible
       }
     }
-    return true;
+    return true; // El espacio está disponible
   }
 
   Future<ReservationModel> getReservation(String uid) async {
@@ -132,7 +116,7 @@ class ReservationService {
         .update({'status': newStatus});
   }
 
-   Future<List<ReservationModel>> getAllReservations() async {
+  Future<List<ReservationModel>> getAllReservations() async {
     QuerySnapshot querySnapshot = await reservationsRef.get();
     return querySnapshot.docs
         .map((doc) => ReservationModel.fromDocument(doc))
@@ -143,7 +127,6 @@ class ReservationService {
     QuerySnapshot querySnapshot = await reservationsRef
         .where('status', isEqualTo: 'approved')
         .get();
-
     return querySnapshot.docs
         .map((doc) => ReservationModel.fromDocument(doc))
         .toList();
