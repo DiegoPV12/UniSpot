@@ -14,7 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await initializeDateFormatting('es_ES', null); 
+  await initializeDateFormatting('es_ES', null);
 
   runApp(const MyApp());
 }
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ 
+      providers: [
         Provider<SpacesBloc>(
           create: (context) => SpacesBloc(spaceService: SpaceService.instance),
           dispose: (context, bloc) => bloc.close(),
@@ -38,6 +38,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
           fontFamily: 'Inter',
+          textSelectionTheme: const TextSelectionThemeData(
+            selectionHandleColor: Color.fromARGB(255, 129, 40, 75),
+          ),
         ),
         home: const MyHomePage(title: 'Flutter Demo Home Page'),
         routes: {
