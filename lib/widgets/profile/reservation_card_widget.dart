@@ -84,7 +84,10 @@ class ReservationCardWidget extends StatelessWidget {
       future: SpaceService.instance.getSpaceFromFirestore(reservation.spaceId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: Color.fromRGBO(129, 40, 75, 1),));
+          return Center(
+              child: CircularProgressIndicator(
+            color: Color.fromRGBO(129, 40, 75, 1),
+          ));
         }
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
@@ -135,6 +138,10 @@ class ReservationCardWidget extends StatelessWidget {
                         const SizedBox(height: 5.0),
                         Text(
                           '${_formatTime(reservation.startTime)} - ${_formatTime(reservation.endTime)}',
+                          style: TextStyle(
+                            fontSize:
+                                12.0,
+                          ),
                         )
                       ],
                     ),
@@ -168,7 +175,7 @@ class ReservationCardWidget extends StatelessWidget {
             ),
           ),
         );
-        
+
         bool isSwipeable = reservation.status != 'cancelled' &&
             reservation.status != 'approved';
 
